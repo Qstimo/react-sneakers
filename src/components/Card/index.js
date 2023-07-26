@@ -5,18 +5,18 @@ import AppContext from "../../context";
 
 
 
-function Card({ id, onFavorite, name, imageUrl, price, onPlus, favorited = false, added = false, loading = false }) {
+function Card({ id,  onFavorite, name, imageUrl, price, onPlus, favorited = false, added = false, loading = false }) {
   const [isFavorite, setIsFavorite] = React.useState(favorited);
+  const obj = { id, name, imageUrl, price, parrentId:id, };
   const onClickPlus = () => {
-    onPlus({ id, name, imageUrl, price });
+    onPlus(obj);
   };
   const { isItemAdded } = React.useContext(AppContext)
-  console.log(isItemAdded(), name)
   const onClickFavorite = () => {
     setIsFavorite(!isFavorite)
-    onFavorite({ id, name, imageUrl, price });
+    onFavorite(obj);
   }
-  console.log(added, name)
+
   return (
 
     <div className={styles.card}>

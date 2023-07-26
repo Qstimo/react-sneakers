@@ -6,6 +6,7 @@ import axios from "axios";
 import { Route, Routes } from "react-router-dom";
 import Favorites from "./pages/Favorites";
 import AppContext from "./context";
+import Orders from "./pages/Orders";
 
 
 function App() {
@@ -62,7 +63,7 @@ function App() {
     } else {
       setFavorites((prev) => [...prev, obj]);
     }
-    console.log(favorites);
+    // console.log(favorites);
   };
 
   React.useEffect(() => {
@@ -72,16 +73,16 @@ function App() {
     const storedArray = localStorage.getItem("favorites");
     if (storedArray) {
       // setFavorites(JSON.parse(storedArray));
-      console.log(JSON.parse(storedArray));
+      // console.log(JSON.parse(storedArray));
     }
   }, []);
 
   const isItemAdded = (id) => {
-    return cartItems.some((obj) => Number(obj.id) === Number(id));
+    return cartItems.some((obj) => Number(obj.parrentId) === Number(id));
   }
 
   return (
-    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, setCartOpened}}>
+    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, setCartOpened,setCartItems,cartItems}}>
       <div className="wrapper clear">
       {cartOpened && (
         <Drawer
@@ -111,6 +112,12 @@ function App() {
           path="favorites"
           element={
             <Favorites  onAddToFavorite={onAddToFavorite} />
+          }
+        ></Route>
+        <Route
+          path="orders"
+          element={
+            <Orders   />
           }
         ></Route>
       </Routes>

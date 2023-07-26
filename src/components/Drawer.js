@@ -1,4 +1,29 @@
+import Info from "./info";
+import React from "react";
+import AppContext from "../context";
+
 function Drawer({ onClose, items, onRemove = [] }) {
+  const [isOrderComplited, setIsOrderComplited] = React.useState(false);
+
+  const { setCartItems, cartItems } = React.useContext(AppContext);
+  const [orderId, setOrderId] = React.useState(null);
+
+  const onClickOreder = () => {
+    try {
+      localStorage.setItem('order', JSON.stringify([{...cartItems}]));
+      // setOrderId(JSON.parse(localStorage.getItem('order')));
+      const objOrder = JSON.parse(localStorage.getItem('order'));
+      setOrderId(Object.keys(objOrder));
+      setIsOrderComplited(true);
+      setCartItems([]);
+    }
+    catch (eror) {
+      alert("Не удалось создать заказ");
+    }
+  };
+
+  const totalPrice = cartItems.reduce((sum, obj)=> obj.price + sum, 0);
+
   return (
     <div className="overlay" >
       <div className="drawer ">
@@ -25,35 +50,26 @@ function Drawer({ onClose, items, onRemove = [] }) {
                       Итого:
                     </span>
                     <div></div>
-                    <b>21 498 руб. </b>
+                    <b>{totalPrice} руб. </b>
                   </li>
                   <li className="d-flex">
                     <span>
                       Налог 5%:
                     </span>
                     <div></div>
-                    <b>1074 руб. </b>
+                    <b>{totalPrice/100 *5} руб. </b>
                   </li>
                 </ul>
-                <button className="greenButton">Оформить заказ<img src="/img/arrow.svg" alt="arrow"></img></button>
-              </div></>) : (
-            <div className="cartEmpty d-flex align-center justify-center flex-column flex">
-              <img className="mb-20" src="/img/empty-cart.png" width={120} height={120} alt="пустая корзина" />
-              <h2>Корзина пустая</h2>
-              <p className="opacity-6">Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.</p>
-              <button onClick={onClose}  className="greenButton">
-                <img src="img/arrow.svg" alt="Arrow" />
-                Вернуться назад
-              </button>
-            </div>
+                <button onClick={onClickOreder} className="greenButton">Оформить заказ<img src="/img/arrow.svg" alt="arrow"></img></button>
+              </div></>) : (<Info
+                title={isOrderComplited ? 'Заказ оформлен!' : 'Корзна пустая'}
+                image={isOrderComplited ? 'img/complited-order.png' : 'img/empty-cart.png'}
+                description={isOrderComplited ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке ` : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'}
+
+              />
+
           )
         }
-
-
-
-
-
-
       </div>
     </div>
   )
